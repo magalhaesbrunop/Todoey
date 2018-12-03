@@ -11,15 +11,19 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            
+            itemArray = items
 
+        }
     }
     
-    //MARK - Tableview Datasource Methods
+    //MARK: Tableview Datasource Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
@@ -30,7 +34,7 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    //MARK - TableView Delegate Methods
+    //MARK: TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         //print(itemArray[indexPath.row])
@@ -49,7 +53,7 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    //MARK - Add New Items
+    //MARK: Add New Items
     @IBAction func addButtonPressed(_ sender: Any) {
         
         var textField = UITextField()
@@ -60,6 +64,8 @@ class TodoListViewController: UITableViewController {
             //What will happen once the user clicks the Add Item button on our UIAlert
             self.itemArray.append(textField.text!)
             
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            
             self.tableView.reloadData()
             
         }
@@ -69,7 +75,6 @@ class TodoListViewController: UITableViewController {
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
 
-            
         }
         
         alert.addAction(action)
@@ -77,12 +82,10 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return itemArray.count
+        
     }
-
-
 }
 
